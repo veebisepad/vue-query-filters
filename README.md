@@ -3,6 +3,12 @@
 This package allows you to build query arguments with ease. We are using [URLSearchParams](https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams) to keep track of active query values.
 When coupled with [Inertiajs](https://inertiajs.com/) & [Laravel](https://laravel.com/) it can be used to filter/sort data with ease.
 
+## installation
+
+```
+npm i @veebisepad/vue-query-filters
+```
+
 ## Basic usage
 
 `useFilter()` accepts an array of filterObjects & options as arguments.
