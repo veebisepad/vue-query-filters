@@ -9,13 +9,13 @@ interface options {
     delimiter?: string
     callbackFn?(filters: QueryObject): void
 }
-
+export type FilterValue = string[] | number[] | string | number | boolean | null
 export type FilterStruct = filterObject
 export type QueryObject = Record<string, string>
-export type FilterValueObject = Record<string, any>
+export type FilterValueObject = Record<string, FilterValue>
 
 interface FilterParams {
-    toQueryString(): URLSearchParams
+    toSeachParams(): URLSearchParams
     toQueryObject(): QueryObject
     has(filter: string, value: string | number): boolean
     clear(filter: string): void
@@ -43,16 +43,9 @@ export function useFilters(filters: filterObject[], options: Options<options>): 
     const params = reactive({
         ...filterParams,
         hasCallback: options.callbackFn ? true : false,
-        toQueryString() {
-            let query = new URLSearchParams()
 
-            filters.forEach(filter => {
-                if(this[filter.key] && this[filter.key].length) {
-                    query.set(filter.key, this[filter.key])
-                }
-            })
-            
-            return query
+        toSeachParams() {
+            return new URLSearchParams(this.toQueryObject())
         },
         get(): void {
             if(options.callbackFn){
