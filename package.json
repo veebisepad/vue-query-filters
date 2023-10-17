@@ -1,0 +1,23 @@
+{
+  "name": "@veebisepad/vue-query-filters",
+  "version": "1.0.0",
+  "description": "reactive url query param helper.",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com:veebisepad/vue-query-filters.git"
+  },
+  "keywords": [
+    "vue",
+    "3",
+    "queryparams"
+  ],
+  "author": "ralf@veebisepad",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^3.3.4"
+  }
+}
