@@ -1,6 +1,6 @@
 {
   "name": "@veebisepad/vue-query-filters",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "reactive url query param helper.",
   "main": "index.ts",
   "scripts": {
@@ -8,8 +8,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/veebisepad/vue-query-filters"
+    "url": "https://github.com/veebisepad/vue-query-filters.git"
   },
+  
   "keywords": [
     "vue",
     "3",
