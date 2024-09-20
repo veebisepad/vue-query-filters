@@ -49,7 +49,7 @@ const filters = useFilters({
 
 - `options`: An object that includes:
   - `delimiter` (optional): The delimiter used for separating multiple values. Defaults to `,`.
-  - `onGet` (optional): A function called when filters change, receiving the current filter state as a query object.
+  - `onGet` (optional): A function called by `get()`, receiving the current filter state as a query object.
  ```typescript
 const filters = useFilters(
   {
