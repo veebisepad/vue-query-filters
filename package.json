@@ -1,7 +1,7 @@
 {
   "name": "@veebisepad/vue-query-filters",
-  "version": "1.0.1",
-  "description": "reactive url query param helper.",
+  "version": "2.0.0",
+  "description": "reactive utility for managing URL query parameters.",
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,7 +14,14 @@
   "keywords": [
     "vue",
     "3",
-    "queryparams"
+    "queryparams",
+    "search",
+    "filter",
+    "vue3",
+    "laravel",
+    "inertia",
+    "inertiajs",
+    "spatie"
   ],
   "author": "ralf@veebisepad",
   "license": "MIT",
