@@ -88,7 +88,7 @@ export function useFilters<T extends Filters>(filters: T, options: Options = {})
             const type = filters[filter];
             const filterProp = this[filter];
 
-            if (!filterProp || !type) {
+            if (!type) {
                 console.error(`Filter "${filter}" does not exist.`);
                 return false;
             }
@@ -104,9 +104,8 @@ export function useFilters<T extends Filters>(filters: T, options: Options = {})
         },
         clear(filter: string, shouldGet = true): void {
             const type = filters[filter];
-            const filterProp = this[filter];
 
-            if (!filterProp || !type) {
+            if (!type) {
                 console.error(`Filter "${filter}" does not exist.`);
                 return;
             }
