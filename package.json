@@ -1,6 +1,6 @@
 {
   "name": "@veebisepad/vue-query-filters",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "reactive utility for managing URL query parameters.",
   "main": "index.ts",
   "scripts": {
