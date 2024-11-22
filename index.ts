@@ -1,12 +1,10 @@
-import { reactive } from 'vue';
+import { Reactive, reactive } from 'vue';
 
 type Single = 'single';
 type Multiple = 'multiple';
 type Between = 'between';
 
 type FilterType = Single | Multiple | Between;
-
-type Filters = Record<string, FilterType>;
 
 type FilterValueMap<V> = V extends Single
     ? string | number | undefined | null
@@ -21,9 +19,20 @@ interface Options {
     onGet?(filters: QueryObject): void;
 }
 
-export type QueryObject = Record<string, string>;
+interface FilterMethods {
+    toSeachParams(): URLSearchParams;
+    get(): void;
+    toQueryObject(): QueryObject;
+    has(filter: string, value: string | number): boolean;
+    clear(filter: string, shouldGet?: boolean): void;
+    clearAll(): void;
+}
 
-export function useFilters<T extends Filters>(filters: T, options: Options = {}) {
+export type QueryObject = Record<string, string>;
+export type Filters = Record<string | symbol, FilterType>;
+export type QueryFilters<T extends Filters> = Reactive<{ [K in keyof T]: FilterValueMap<T[K]> } & FilterMethods>;
+
+export function useFilters<T extends Filters>(filters: T, options: Options = {}): QueryFilters<T> {
     const queryParams = new URLSearchParams(document.location.search);
     const delimiter = options.delimiter ?? ',';
     const filterKeys = Object.keys(filters);
