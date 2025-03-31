@@ -88,9 +88,10 @@ export interface FilterMethods<T extends Filters> {
 
     /**
      * Creates an object with filter keys and their string representations
+     * @param transformKeys Whether to transform keys using the keyTransformer function
      * @returns Object mapping filter keys to query string values
      */
-    toQueryObject(): Record<string, string>;
+    toQueryObject(transformKeys?: boolean): Record<string, string>;
 
     /**
      * Checks if a value exists in the specified filter
