@@ -391,7 +391,9 @@ A reactive object with filter values and methods:
 
 -   `toSearchParams()`: Converts filters to URLSearchParams object
 -   `get()`: Triggers the onApply callback with current filter values
--   `toQueryObject()`: Creates an object with filter keys and their string representations
+-   `toQueryObject(transformKeys)`: Creates an object with filter keys and their string representations
+    -   `transformKeys`: (Optional boolean, default: true) When true, keys are transformed using the transformKey function
+-   `data()`: Returns a plain object with just the filter values, without methods
 -   `has(filter, value)`: Checks if a value exists in the specified filter
 -   `clear(filterKey, shouldGet)`: Resets one or more filters to default values
 -   `clearAll()`: Resets all filters to their default values

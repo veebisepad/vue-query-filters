@@ -41,17 +41,21 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
             }
         },
 
-        toQueryObject(): QueryObject {
+        toQueryObject(transformKeys = true): QueryObject {
             return filterKeys.reduce((queryObject, key) => {
-                const wrappedKey = filters[key].transformKey(key as string);
                 const paramValue = filters[key].serializeQueryParam(this[key], options.delimiter);
 
                 if (paramValue) {
-                    queryObject[wrappedKey] = paramValue;
+                    const objectKey = transformKeys ? filters[key].transformKey(key as string) : key;
+                    queryObject[objectKey as string] = paramValue;
                 }
 
                 return queryObject;
             }, {} as QueryObject);
+        },
+
+        data(): { [K in keyof T]: FilterValueMap<T[K]> } {
+            return filterProps;
         },
 
         has<K extends keyof T>(filter: K, value: string | number): boolean {

@@ -117,6 +117,12 @@ export interface FilterMethods<T extends Filters> {
      * @param newOptions New options to merge with existing ones
      */
     setOptions(newOptions: Partial<Options>): void;
+
+    /**
+     * Filters data object
+     * @returns Object with filter keys and their values
+     */
+    data(): { [K in keyof T]: FilterValueMap<T[K]> };
 }
 
 export interface SingleFilter<T> extends AllowedFilter<T> {
