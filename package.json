@@ -1,31 +1,52 @@
 {
-  "name": "@veebisepad/vue-query-filters",
-  "version": "2.0.2",
-  "description": "reactive utility for managing URL query parameters.",
-  "main": "index.ts",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/veebisepad/vue-query-filters.git"
-  },
-  
-  "keywords": [
-    "vue",
-    "3",
-    "queryparams",
-    "search",
-    "filter",
-    "vue3",
-    "laravel",
-    "inertia",
-    "inertiajs",
-    "spatie"
-  ],
-  "author": "ralf@veebisepad",
-  "license": "MIT",
-  "dependencies": {
-    "vue": "^3.3.4"
-  }
+    "name": "@veebisepad/vue-query-filters",
+    "version": "2.0.2",
+    "description": "Reactive utility for managing URL query parameters in Vue 3.",
+    "main": "dist/index.js",
+    "type": "module",
+    "types": "types/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./types/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "types",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "npm run clean && tsc",
+        "clean": "rm -rf types && rm -rf dist",
+        "prepublishOnly": "npm run clean && npm run build",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/veebisepad/vue-query-filters.git"
+    },
+    "keywords": [
+        "vue",
+        "3",
+        "queryparams",
+        "search",
+        "filter",
+        "vue3",
+        "laravel",
+        "inertia",
+        "inertiajs",
+        "spatie"
+    ],
+    "author": "ralf@veebisepad",
+    "license": "MIT",
+    "peerDependencies": {
+        "vue": "^3.0.0"
+    },
+    "devDependencies": {
+        "typescript": "^4.9.5",
+        "vue": "^3.3.4"
+    }
 }
