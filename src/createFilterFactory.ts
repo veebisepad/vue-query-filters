@@ -3,9 +3,18 @@
  * @returns Object containing filter factory methods
  */
 
-import { AllowedFilter, MultipleFilter, RangeFilter, SingleFilter } from './types';
+import { AllowedFilter, FilterFactoryOptions, MultipleFilter, RangeFilter, SingleFilter } from './types';
 
-export const createFilterFactory = () => {
+export const createFilterFactory = (options?: FilterFactoryOptions) => {
+    const keyTransformer = options?.keyTransformer || ((key: string) => key);
+
+    /**
+     * Transforms a key using the provided key transformer function
+     * @param key The key to wrap
+     * @returns The transformed key
+     */
+    const transformKey = (key: string): string => keyTransformer(key);
+
     const allowedFilters = {
         /**
          * Creates a filter for a single value
@@ -24,6 +33,7 @@ export const createFilterFactory = () => {
             hasValue(filterValue: SingleType, value: string | number): boolean {
                 return filterValue?.toString() === value.toString();
             },
+            transformKey,
         }),
 
         /**
@@ -43,6 +53,7 @@ export const createFilterFactory = () => {
             hasValue(filterValue: MultipleType[], value: string | number): boolean {
                 return Array.isArray(filterValue) ? filterValue.includes(value as MultipleType) : false;
             },
+            transformKey,
         }),
 
         /**
@@ -68,6 +79,7 @@ export const createFilterFactory = () => {
             hasValue(filterValue: { from: RangeType; to: RangeType }, value: string | number): boolean {
                 return filterValue?.from?.toString() === value.toString() || filterValue?.to?.toString() === value.toString();
             },
+            transformKey,
         }),
 
         /**
@@ -76,7 +88,12 @@ export const createFilterFactory = () => {
          * @param filter A fully-defined filter object
          * @returns The same filter, for custom scenarios
          */
-        custom: <CustomType>(filter: AllowedFilter<CustomType>): AllowedFilter<CustomType> => filter,
+        custom: <CustomType>(filter: AllowedFilter<CustomType>): AllowedFilter<CustomType> => {
+            return {
+                ...filter,
+                transformKey,
+            };
+        },
     };
 
     return allowedFilters;

@@ -46,7 +46,6 @@ console.log(filters.category);
 console.log(filters.brands);
 console.log(filters.price);
 
-
 watch(
     filters,
     () => {
@@ -56,24 +55,23 @@ watch(
 );
 
 // ----------------------------------------------------------
-// Vue Query Filters does not automatically watch parameters because it aims to provide maximum flexibility and control to developers. 
+// Vue Query Filters does not automatically watch parameters because it aims to provide maximum flexibility and control to developers.
 
 // Example: Using VueUse debounce to watch filters
 import { useDebounceFn } from '@vueuse/core';
 import { watch } from 'vue';
 
 const debouncedApplyFilters = useDebounceFn(() => {
-  filters.get(); // Trigger the onApply callback
+    filters.get(); // Trigger the onApply callback
 }, 300); // Debounce for 300ms
 
 watch(
-  filters,
-  () => {
-    debouncedApplyFilters();
-  },
-  { deep: true }
+    filters,
+    () => {
+        debouncedApplyFilters();
+    },
+    { deep: true }
 );
-
 
 // Reset filters
 filters.clear('category'); // Reset a single filter
@@ -175,6 +173,30 @@ const filters = useFilters(
 // 4) Use the custom filter
 filters.specialSetting = 234;
 filters.get(); // calls onApply with updated query params
+```
+
+### `createFilterFactory(options)`
+
+Creates a collection of filter factory functions.
+
+#### Parameters:
+
+-   `options`: (Optional) Configuration options
+    -   `keyTransformer`: Function to transform filter keys for URL parameters (e.g., for Laravel's query builder)
+
+#### Example:
+
+```js
+// For Laravel Spatie Query Builder format
+const spatieFactory = createFilterFactory({
+    keyTransformer: key => `filter[${key}]`,
+});
+
+// Now all keys will be transformed automatically
+const filters = useFilters({
+    name: spatieFactory.single(), // Will become filter[name] in URL
+    category: spatieFactory.multiple(), // Will become filter[category] in URL
+});
 ```
 
 ## Integration Examples

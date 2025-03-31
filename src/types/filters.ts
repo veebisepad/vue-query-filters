@@ -28,13 +28,19 @@ export interface AllowedFilter<T> {
      * @returns True if value exists in filter
      */
     hasValue(filterValue: T, value: string | number): boolean;
+    /**
+     * Transforms filter keys for query parameter names
+     * @param key Original filter key from the application
+     * @returns Transformed key suitable for URL parameters
+     */
+    transformKey: (key: string) => string;
 }
 
 /** Map of filter keys to their filter implementation */
 export type Filters = Record<string, AllowedFilter<any>>;
 
 /** Map of filter keys to their string representation for URL */
-export type QueryObject<T> = Record<keyof T, string>;
+export type QueryObject = Record<string, string>;
 
 /**
  * Maps filter types to their value types using the defaultValue property
@@ -54,14 +60,14 @@ export type FilterState<T extends Filters> = {
 /**
  * Configuration options for filters
  */
-export interface Options<T> {
+export interface Options {
     /** Character used to separate multiple values in URL parameters */
     delimiter: string;
     /**
      * Callback triggered when filters are applied
      * @param filters The query object with current filter values
      */
-    onApply?(filters: QueryObject<T>): void;
+    onApply?(filters: QueryObject): void;
 }
 
 /**
@@ -84,7 +90,7 @@ export interface FilterMethods<T extends Filters> {
      * Creates an object with filter keys and their string representations
      * @returns Object mapping filter keys to query string values
      */
-    toQueryObject(): QueryObject<T>;
+    toQueryObject(): Record<string, string>;
 
     /**
      * Checks if a value exists in the specified filter
@@ -110,7 +116,7 @@ export interface FilterMethods<T extends Filters> {
      * Updates filter options
      * @param newOptions New options to merge with existing ones
      */
-    setOptions(newOptions: Partial<Options<T>>): void;
+    setOptions(newOptions: Partial<Options>): void;
 }
 
 export interface SingleFilter<T> extends AllowedFilter<T> {
@@ -122,3 +128,7 @@ export interface MultipleFilter<T> extends AllowedFilter<T[]> {
 export interface RangeFilter<T> extends AllowedFilter<{ from: T; to: T }> {
     defaultValue: { from: T; to: T };
 }
+
+export type FilterFactoryOptions = {
+    keyTransformer?: (key: string) => string;
+};

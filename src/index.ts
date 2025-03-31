@@ -22,3 +22,4 @@ export { useFilters } from './useFilters';
  * });
  */
 export const factory = createFilterFactory();
+

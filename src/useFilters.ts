@@ -1,5 +1,5 @@
-import { reactive } from "vue";
-import { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObject } from "./types";
+import { reactive } from 'vue';
+import { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObject } from './types';
 
 /**
  * Creates a reactive filter object from filter configurations
@@ -7,7 +7,7 @@ import { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObjec
  * @param initialOptions Initial options for the filters
  * @returns Reactive filter object with values and methods
  */
-export function useFilters<T extends Filters>(filters: T, initialOptions: Partial<Options<T>> = {}): QueryFilters<T> {
+export function useFilters<T extends Filters>(filters: T, initialOptions: Partial<Options> = {}): QueryFilters<T> {
     const queryParams = new URLSearchParams(document.location.search);
     let options = { delimiter: ',', ...initialOptions };
     const filterKeys = Object.keys(filters) as Array<keyof T>;
@@ -16,7 +16,8 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
         Object.keys(filters).length > 0
             ? (Object.keys(filters) as Array<keyof T>).reduce((carry, key) => {
                   const filterConfig = filters[key];
-                  const paramValue = queryParams.get(key as string);
+                  const transformedKey = filterConfig.transformKey(key as string);
+                  const paramValue = queryParams.get(transformedKey);
 
                   carry[key] = filterConfig.parseQueryParam(paramValue, options.delimiter) as FilterValueMap<typeof filterConfig>;
 
@@ -40,16 +41,17 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
             }
         },
 
-        toQueryObject(): QueryObject<T> {
+        toQueryObject(): QueryObject {
             return filterKeys.reduce((queryObject, key) => {
+                const wrappedKey = filters[key].transformKey(key as string);
                 const paramValue = filters[key].serializeQueryParam(this[key], options.delimiter);
 
                 if (paramValue) {
-                    queryObject[key] = paramValue;
+                    queryObject[wrappedKey] = paramValue;
                 }
 
                 return queryObject;
-            }, {} as QueryObject<T>);
+            }, {} as QueryObject);
         },
 
         has<K extends keyof T>(filter: K, value: string | number): boolean {
@@ -70,7 +72,7 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
         clearAll() {
             this.clear(filterKeys, true);
         },
-        setOptions(newOptions: Partial<Options<T>>) {
+        setOptions(newOptions: Partial<Options>) {
             options = { ...options, ...newOptions };
         },
     };
