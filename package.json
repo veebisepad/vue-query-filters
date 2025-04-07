@@ -1,6 +1,6 @@
 {
     "name": "@veebisepad/vue-query-filters",
-    "version": "3.2.1",
+    "version": "3.3.0",
     "description": "Reactive utility for managing URL query parameters in Vue 3.",
     "main": "dist/index.js",
     "type": "module",
