@@ -9,7 +9,7 @@ import { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObjec
  */
 export function useFilters<T extends Filters>(filters: T, initialOptions: Partial<Options> = {}): QueryFilters<T> {
     const queryParams = new URLSearchParams(document.location.search);
-    let options = { delimiter: ',', ...initialOptions };
+    let options = { delimiter: ',',preserveQueryOrder: true, ...initialOptions };
     const filterKeys = Object.keys(filters) as Array<keyof T>;
 
     const filterProps =
@@ -35,10 +35,23 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
 
         get(): void {
             if (options.onApply) {
-                options.onApply(this.toQueryObject());
+                options.onApply(options.preserveQueryOrder ? this.toOrderedQueryObject() : this.toQueryObject());
             } else {
                 console.warn('Cannot use get() - Filter callback is not set');
             }
+        },
+
+        toOrderedQueryObject(transformKeys = true): QueryObject {
+            const queryObject = this.toQueryObject(transformKeys);
+            const orderedObject: QueryObject = {};
+
+            queryParams.forEach((_, key) => {
+                if (key in queryObject) {
+                    orderedObject[key] = queryObject[key];
+                }
+            });
+
+            return Object.assign(orderedObject, queryObject);
         },
 
         toQueryObject(transformKeys = true): QueryObject {

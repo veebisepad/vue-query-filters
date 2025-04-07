@@ -87,7 +87,9 @@ const f = createFilterFactory({
 | Option | Type | Description | Default |
 |--------|------|-------------|---------|
 | `delimiter` | String | Character used to separate multiple values | `','` |
-| `onApply` | Function | Callback function triggered when filters are applied via `get()` | `undefined` |
+| `onApply` | Function | Callback function triggered when filters are applied via `get()` | 
+| `preserveQueryOrder` | Boolean | Preserves URL query parameter order when generating query objects | `true` |
+`undefined` |
 
 Example:
 ```js
@@ -120,6 +122,7 @@ const filters = useFilters(
 | `get()` | Triggers the onApply callback | None | void |
 | `toSearchParams()` | Converts filters to URLSearchParams | None | URLSearchParams object |
 | `toQueryObject(transformKeys?)` | Creates object with filter key-values | `transformKeys`: Boolean (default: true) | Object with filter parameters |
+| `toOrderedQueryObject(transformKeys?)` | Creates object with filter key-values, preserving URL parameter order | `transformKeys`: Boolean (default: true) | Object with ordered filter parameters |
 | `data()` | Returns plain object of filter values | None | Filter values object |
 | `has(filter, value)` | Checks if value exists in filter | `filter`: Filter key<br>`value`: Value to check | Boolean |
 | `clear(filterKey, shouldGet?)` | Resets filter(s) to default | `filterKey`: String/Array of keys<br>`shouldGet`: Boolean to trigger onApply | Void |

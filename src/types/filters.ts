@@ -68,6 +68,11 @@ export interface Options {
      * @param filters The query object with current filter values
      */
     onApply?(filters: QueryObject): void;
+    /**
+     * When true, preserves the order of query parameters as they appear in the URL
+     * @default true
+     */
+    preserveQueryOrder?: boolean;
 }
 
 /**
@@ -92,6 +97,14 @@ export interface FilterMethods<T extends Filters> {
      * @returns Object mapping filter keys to query string values
      */
     toQueryObject(transformKeys?: boolean): Record<string, string>;
+
+     /**
+     * Creates an object with filter keys and their string representations,
+     * preserving the order of parameters from the current URL
+     * @param transformKeys Whether to transform keys using the keyTransformer function
+     * @returns Object mapping filter keys to query string values in URL order
+     */
+     toOrderedQueryObject(transformKeys?: boolean): Record<string, string>;
 
     /**
      * Checks if a value exists in the specified filter
