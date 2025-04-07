@@ -9,7 +9,7 @@ import { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObjec
  */
 export function useFilters<T extends Filters>(filters: T, initialOptions: Partial<Options> = {}): QueryFilters<T> {
     const queryParams = new URLSearchParams(document.location.search);
-    let options = { delimiter: ',',preserveQueryOrder: true, ...initialOptions };
+    let options = { delimiter: ',', preserveQueryOrder: true, ...initialOptions };
     const filterKeys = Object.keys(filters) as Array<keyof T>;
 
     const filterProps =
@@ -45,7 +45,7 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
             const queryObject = this.toQueryObject(transformKeys);
             const orderedObject: QueryObject = {};
 
-            queryParams.forEach((_, key) => {
+            new URLSearchParams(document.location.search).forEach((_, key) => {
                 if (key in queryObject) {
                     orderedObject[key] = queryObject[key];
                 }
