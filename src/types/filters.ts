@@ -67,7 +67,7 @@ export interface Options {
      * Callback triggered when filters are applied
      * @param filters The query object with current filter values
      */
-    onApply?(filters: QueryObject): void;
+    onApply?(filters: QueryObject): void | Promise<void>;
     /**
      * When true, preserves the order of query parameters as they appear in the URL
      * @default true
@@ -90,6 +90,12 @@ export interface FilterMethods<T extends Filters> {
      * Triggers the onApply callback with current filter values
      */
     get(): void;
+
+    /**
+     * Indicates whether an async onApply callback is currently executing
+     * @readonly
+     */
+    readonly processing: boolean;
 
     /**
      * Creates an object with filter keys and their string representations

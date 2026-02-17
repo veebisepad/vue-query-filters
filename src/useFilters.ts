@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObject } from './types';
 
 /**
@@ -11,6 +11,7 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
     const queryParams = new URLSearchParams(document.location.search);
     let options = { delimiter: ',', preserveQueryOrder: true, ...initialOptions };
     const filterKeys = Object.keys(filters) as Array<keyof T>;
+    const processing = ref(false);
 
     const filterProps =
         Object.keys(filters).length > 0
@@ -29,13 +30,26 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
 
     const filterObject: FilterState<T> = {
         ...filterProps,
+        get processing() {
+            return processing.value;
+        },
         toSearchParams(): URLSearchParams {
             return new URLSearchParams(this.toQueryObject());
         },
 
         get(): void {
             if (options.onApply) {
-                options.onApply(options.preserveQueryOrder ? this.toOrderedQueryObject() : this.toQueryObject());
+                processing.value = true;
+                const result = options.onApply(options.preserveQueryOrder ? this.toOrderedQueryObject() : this.toQueryObject());
+                
+                // Check if result is a Promise
+                if (result && typeof result.then === 'function') {
+                    result.finally(() => {
+                        processing.value = false;
+                    });
+                } else {
+                    processing.value = false;
+                }
             } else {
                 console.warn('Cannot use get() - Filter callback is not set');
             }
