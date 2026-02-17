@@ -129,6 +129,12 @@ const filters = useFilters(
 | `clearAll()` | Resets all filters | None | Void |
 | `setOptions(newOptions)` | Updates filter options | `newOptions`: New options object | Void |
 
+#### Filter Object Properties
+
+| Property | Description | Type |
+|----------|-------------|------|
+| `processing` | Indicates whether an async onApply callback is currently executing | `boolean` (read-only) |
+
 ## Examples
 
 ### 1. Basic Filter Setup and Usage
@@ -307,6 +313,62 @@ const filters = useFilters(
 // Auto-apply filters when they change
 watch(filters, () => filters.get(), { deep: true });
 ```
+
+### 7. Async Filters with Processing State
+
+The `processing` property automatically tracks async operations, perfect for showing loading states:
+
+```vue
+<script setup>
+import { useFilters, createFilterFactory } from '@veebisepad/vue-query-filters';
+
+const f = createFilterFactory();
+
+const filters = useFilters(
+    {
+        search: f.single(''),
+        category: f.multiple(),
+    },
+    {
+        onApply: async (queryParams) => {
+            // Async callback - processing will be automatically tracked
+            const searchParams = new URLSearchParams(queryParams);
+            const response = await fetch(`/api/products?${searchParams}`);
+            const data = await response.json();
+            // handle response...
+        },
+    }
+);
+
+function applyFilters() {
+    filters.get(); // Sets filters.processing = true until the async operation completes
+}
+</script>
+
+<template>
+    <div>
+        <input v-model="filters.search" type="text" placeholder="Search..." />
+        
+        <!-- Show loading indicator -->
+        <div v-if="filters.processing" class="loading">
+            Loading results...
+        </div>
+        
+        <!-- Disable button while processing -->
+        <button 
+            @click="applyFilters" 
+            :disabled="filters.processing"
+        >
+            {{ filters.processing ? 'Loading...' : 'Apply Filters' }}
+        </button>
+    </div>
+</template>
+```
+
+The `processing` property works with both async and sync callbacks:
+- **Async callback** (returns a Promise): `processing` is `true` until the promise resolves or rejects
+- **Sync callback** (no return or non-Promise return): `processing` is briefly `true` during callback execution
+
 
 ## TypeScript Support
 
