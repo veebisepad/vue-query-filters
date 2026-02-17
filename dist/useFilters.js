@@ -32,8 +32,8 @@ export function useFilters(filters, initialOptions = {}) {
             if (options.onApply) {
                 processing.value = true;
                 const result = options.onApply(options.preserveQueryOrder ? this.toOrderedQueryObject() : this.toQueryObject());
-                // Check if result is a Promise
-                if (result && typeof result.then === 'function') {
+                // Check if result is a Promise-like object
+                if (result && typeof result === 'object' && typeof result.then === 'function') {
                     result.finally(() => {
                         processing.value = false;
                     });

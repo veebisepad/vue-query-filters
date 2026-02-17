@@ -367,7 +367,7 @@ function applyFilters() {
 
 The `processing` property works with both async and sync callbacks:
 - **Async callback** (returns a Promise): `processing` is `true` until the promise resolves or rejects
-- **Sync callback** (no return or non-Promise return): `processing` is briefly `true` during callback execution
+- **Sync callback** (no return or non-Promise return): `processing` is set to `true` and immediately back to `false`. Due to Vue's reactivity batching, this state change may not be visibly rendered in the UI for synchronous operations.
 
 
 ## TypeScript Support
