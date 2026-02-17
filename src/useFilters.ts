@@ -42,7 +42,9 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
                 processing.value = true;
                 const result = options.onApply(options.preserveQueryOrder ? this.toOrderedQueryObject() : this.toQueryObject());
                 
-                // Check if result is a Promise-like object
+                // Check if result is a Promise-like object (thenable)
+                // We use duck typing to support all Promise implementations (native, polyfills, different realms)
+                // This follows the Promise/A+ specification for detecting thenables
                 if (result && typeof result === 'object' && typeof result.then === 'function') {
                     result.finally(() => {
                         processing.value = false;
