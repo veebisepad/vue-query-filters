@@ -4,6 +4,7 @@
  */
 
 import { AllowedFilter, FilterFactoryOptions, MultipleFilter, RangeFilter, SingleFilter } from './types';
+import { cloneDefault } from './utils';
 
 export const createFilterFactory = (options?: FilterFactoryOptions) => {
     const keyTransformer = options?.keyTransformer || ((key: string) => key);
@@ -23,9 +24,9 @@ export const createFilterFactory = (options?: FilterFactoryOptions) => {
          * @returns A filter object handling single values
          */
         single: <SingleType>(defaultValue: SingleType = null as SingleType): SingleFilter<SingleType> => ({
-            defaultValue,
+            defaultValue: cloneDefault(defaultValue),
             parseQueryParam(value: string | null): SingleType {
-                return !value ? this.defaultValue : (value as SingleType);
+                return !value ? cloneDefault(this.defaultValue) : (value as SingleType);
             },
             serializeQueryParam(value: SingleType): string | null {
                 return !value ? null : String(value);
@@ -43,9 +44,9 @@ export const createFilterFactory = (options?: FilterFactoryOptions) => {
          * @returns A filter object handling arrays
          */
         multiple: <MultipleType>(defaultValue: MultipleType[] = []): MultipleFilter<MultipleType> => ({
-            defaultValue,
+            defaultValue: cloneDefault(defaultValue),
             parseQueryParam(value: string | null, delimiter: string): MultipleType[] {
-                return !value ? this.defaultValue : (value.split(delimiter) as MultipleType[]);
+                return !value ? cloneDefault(this.defaultValue) : (value.split(delimiter) as MultipleType[]);
             },
             serializeQueryParam(value: MultipleType[], delimiter: string): string | null {
                 return !Array.isArray(value) || !value.length ? null : value.join(delimiter);
@@ -63,9 +64,9 @@ export const createFilterFactory = (options?: FilterFactoryOptions) => {
          * @returns A filter object handling { from: RangeType; to: RangeType }
          */
         range: <RangeType>(defaultValue: { from: RangeType; to: RangeType } = { from: null as RangeType, to: null as RangeType }): RangeFilter<RangeType> => ({
-            defaultValue,
+            defaultValue: cloneDefault(defaultValue),
             parseQueryParam(value: string | null, delimiter: string): { from: RangeType; to: RangeType } {
-                if (!value) return this.defaultValue;
+                if (!value) return cloneDefault(this.defaultValue);
                 const [from, to] = value.split(delimiter);
                 return {
                     from: from ? (from as unknown as RangeType) : this.defaultValue.from,

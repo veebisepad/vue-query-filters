@@ -1,5 +1,6 @@
 import { reactive } from 'vue';
 import { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObject } from './types';
+import { cloneDefault } from './utils';
 
 /**
  * Creates a reactive filter object from filter configurations
@@ -14,15 +15,18 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
 
     const filterProps =
         Object.keys(filters).length > 0
-            ? (Object.keys(filters) as Array<keyof T>).reduce((carry, key) => {
-                  const filterConfig = filters[key];
-                  const transformedKey = filterConfig.transformKey(key as string);
-                  const paramValue = queryParams.get(transformedKey);
+            ? (Object.keys(filters) as Array<keyof T>).reduce(
+                  (carry, key) => {
+                      const filterConfig = filters[key];
+                      const transformedKey = filterConfig.transformKey(key as string);
+                      const paramValue = queryParams.get(transformedKey);
 
-                  carry[key] = filterConfig.parseQueryParam(paramValue, options.delimiter) as FilterValueMap<typeof filterConfig>;
+                      carry[key] = filterConfig.parseQueryParam(paramValue, options.delimiter) as FilterValueMap<typeof filterConfig>;
 
-                  return carry;
-              }, {} as { [K in keyof T]: FilterValueMap<T[K]> })
+                      return carry;
+                  },
+                  {} as { [K in keyof T]: FilterValueMap<T[K]> },
+              )
             : ({} as { [K in keyof T]: FilterValueMap<T[K]> });
 
     const hasCallback = !!options.onApply;
@@ -79,7 +83,7 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
             if (filtersToClear.length === 0) return;
 
             filtersToClear.forEach(key => {
-                this[key] = filters[key].defaultValue;
+                this[key] = cloneDefault(filters[key].defaultValue) as FilterValueMap<T[typeof key]>;
             });
 
             if (hasCallback && shouldGet) {
