@@ -89,7 +89,7 @@ const f = createFilterFactory({
 | `delimiter` | String | Character used to separate multiple values | `','` |
 | `onApply` | Function | Callback function triggered when filters are applied via `get()` | 
 | `preserveQueryOrder` | Boolean | Preserves URL query parameter order when generating query objects | `true` |
-`undefined` |
+|`location` | LocationLike | Specify custom location (for SSR) uses window.location by default if applicable | `widow.location` |
 
 Example:
 ```js

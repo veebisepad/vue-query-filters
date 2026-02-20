@@ -1,6 +1,6 @@
 import { reactive } from 'vue';
-import { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObject } from './types';
-import { cloneDefault } from './utils';
+import type { Filters, FilterState, FilterValueMap, Options, QueryFilters, QueryObject } from './types';
+import { cloneDefault, getSearchParams } from './utils';
 
 /**
  * Creates a reactive filter object from filter configurations
@@ -9,8 +9,8 @@ import { cloneDefault } from './utils';
  * @returns Reactive filter object with values and methods
  */
 export function useFilters<T extends Filters>(filters: T, initialOptions: Partial<Options> = {}): QueryFilters<T> {
-    const queryParams = new URLSearchParams(document.location.search);
     let options = { delimiter: ',', preserveQueryOrder: true, ...initialOptions };
+    const queryParams = getSearchParams(options.location);
     const filterKeys = Object.keys(filters) as Array<keyof T>;
 
     const filterProps =
@@ -49,7 +49,9 @@ export function useFilters<T extends Filters>(filters: T, initialOptions: Partia
             const queryObject = this.toQueryObject(transformKeys);
             const orderedObject: QueryObject = {};
 
-            new URLSearchParams(document.location.search).forEach((_, key) => {
+            const currentParams = getSearchParams(options.location);
+
+            currentParams.forEach((_, key) => {
                 if (key in queryObject) {
                     orderedObject[key] = queryObject[key];
                 }

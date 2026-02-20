@@ -3,7 +3,7 @@
  * @returns Object containing filter factory methods
  */
 
-import { AllowedFilter, FilterFactoryOptions, MultipleFilter, RangeFilter, SingleFilter } from './types';
+import type { AllowedFilter, FilterFactoryOptions, MultipleFilter, RangeFilter, SingleFilter } from './types';
 import { cloneDefault } from './utils';
 
 export const createFilterFactory = (options?: FilterFactoryOptions) => {
