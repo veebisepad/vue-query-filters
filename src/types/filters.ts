@@ -1,4 +1,4 @@
-import { Reactive } from 'vue';
+import type { Reactive } from 'vue';
 
 /**
  * Base interface for all filter types
@@ -73,6 +73,10 @@ export interface Options {
      * @default true
      */
     preserveQueryOrder?: boolean;
+    /**
+     * Optional Location object to use instead of window.location (for SSR)
+     */
+    location?: LocationLike;
 }
 
 /**
@@ -98,13 +102,13 @@ export interface FilterMethods<T extends Filters> {
      */
     toQueryObject(transformKeys?: boolean): Record<string, string>;
 
-     /**
+    /**
      * Creates an object with filter keys and their string representations,
      * preserving the order of parameters from the current URL
      * @param transformKeys Whether to transform keys using the keyTransformer function
      * @returns Object mapping filter keys to query string values in URL order
      */
-     toOrderedQueryObject(transformKeys?: boolean): Record<string, string>;
+    toOrderedQueryObject(transformKeys?: boolean): Record<string, string>;
 
     /**
      * Checks if a value exists in the specified filter
@@ -152,3 +156,5 @@ export interface RangeFilter<T> extends AllowedFilter<{ from: T; to: T }> {
 export type FilterFactoryOptions = {
     keyTransformer?: (key: string) => string;
 };
+
+export type LocationLike = Pick<Location, 'search'> | URL;

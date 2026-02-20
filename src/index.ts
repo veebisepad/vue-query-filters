@@ -1,15 +1,17 @@
 /**
- * Vue Query Filters - URL query parameter handling for Vue applications
+ *  @packageDocumentation
+ * Vue Query Filters - reactive URL query parameter handling for Vue 3 applications.
+ *
  * @module vue-query-filters
  */
 
-import { createFilterFactory } from './createFilterFactory';
+import { createFilterFactory } from './createFilterFactory.js';
 
 export * from './types';
 
 // Re-export core functions
-export { createFilterFactory } from './createFilterFactory';
-export { useFilters } from './useFilters';
+export { createFilterFactory } from './createFilterFactory.js';
+export { useFilters } from './useFilters.js';
 
 /**
  * Pre-configured filter factory for convenience
@@ -22,4 +24,3 @@ export { useFilters } from './useFilters';
  * });
  */
 export const factory = createFilterFactory();
-
